@@ -1,13 +1,16 @@
-import './App.css'
 
-function App() {
+import React, { Suspense } from 'react';
+import { BrowserRouter, useRoutes } from 'react-router-dom';
+import routes from './routes'; 
 
+const App = () => {
+  const elements = useRoutes(routes);
 
   return (
-    <>
-       <h2 className='py-2 text-cyan-400'>Lost and Found</h2>
-    </>
-  )
-}
+    <Suspense fallback={<div>Loading...</div>}>
+      {elements}
+    </Suspense>
+  );
+};
 
-export default App
+export default App;

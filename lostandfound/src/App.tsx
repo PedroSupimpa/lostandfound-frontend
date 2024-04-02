@@ -1,6 +1,6 @@
 
-import React, { Suspense } from 'react';
-import { BrowserRouter, useRoutes } from 'react-router-dom';
+import  { Suspense } from 'react';
+import {  useRoutes } from 'react-router-dom';
 import routes from './routes'; 
 
 const App = () => {

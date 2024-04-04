@@ -7,7 +7,7 @@ const Home = lazy(() => import('../pages/home'));
 
 const routes: RouteObject[] = [
     {
-        path: '/teste',
+        path: '/',
         element: <Home />,
     },
     {

@@ -1,11 +1,12 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from 'zod';
+import { createUser } from "../../services/user";
 
 const createUserSchema = z.object({
-    name: z.string().nonempty(),
+    name: z.string().nonempty('Name is required'),
     phone: z.string(),
-    email: z.string().nonempty().email(),
+    email: z.string().nonempty('Email is required').email(),
     password: z.string(),
     address: z.object({
         zipcode: z.string(),
@@ -22,8 +23,7 @@ const SignupForm = () => {
     });
 
     function handleCreateUser(data: CreateUserSchema) {
-        console.log(data);
-
+        createUser(data)        
     }
 
     return (
@@ -75,7 +75,6 @@ const SignupForm = () => {
 
             </div>
 
-           
 
             <button  type='submit'
             className="bg-emerald-500 rounded font-semibold text-white h-10 hover:bg-emerald-600">

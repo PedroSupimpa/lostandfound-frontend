@@ -13,7 +13,8 @@ const routes: RouteObject[] = [
     {
         path: '/signup',
         element: <Signup />,
-    }
+    },
+
 ];
 
 

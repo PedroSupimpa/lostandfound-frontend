@@ -19,14 +19,21 @@ const createUserSchema = z.object({
 type CreateUserSchema = z.infer<typeof createUserSchema>;
 
 const SignupForm = () => {
-    const [step, setStep] = useState(1); // Step state
+    const [step, setStep] = useState(1);
     const { register, handleSubmit, formState: { errors } } = useForm<CreateUserSchema>({
         resolver: zodResolver(createUserSchema)
     });
 
     const handleCreateUser = (data: CreateUserSchema) => {
-        // Assuming createUser is a function that handles the API call
-        createUser(data);
+        createUser(data).then((res) => {
+            if (res?.status === 201) {
+                alert('User created successfully');
+            } else {
+                alert('Error creating user');
+            }
+
+        }
+        );
     };
 
     const nextStep = () => {
@@ -38,7 +45,7 @@ const SignupForm = () => {
     };
 
     return (
-        <main className="max-w-md w-full mx-auto p-5 bg-zinc-50 flex items-center justify-center rounded-md">
+        <main className="max-w-md w-full mx-auto  p-5 bg-zinc-50 flex items-center justify-center rounded-md">
             <form onSubmit={handleSubmit(handleCreateUser)} className="flex flex-col gap-4 w-full max-w-sm">
                 {step === 1 && (
                     <>

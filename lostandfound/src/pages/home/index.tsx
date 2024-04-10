@@ -1,4 +1,5 @@
 import {  useNavigate } from "react-router-dom";
+import Login from "../../components/login";
 
 
 const Home = () => {
@@ -10,6 +11,7 @@ const Home = () => {
   };
   return (
     <div className="flex justify-end px-3 pt-2">
+      <Login />
 
   <button onClick={handleClick}
     className="bg-emerald-500 rounded font-semibold text-white h-10 w-fit p-2 hover:bg-emerald-600">

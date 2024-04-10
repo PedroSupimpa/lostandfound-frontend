@@ -13,7 +13,18 @@ export interface IUserRequest {
 }
 
 export const createUser = async (user: IUserRequest) => {
-    await axios.post("http://localhost:3000/user/create", user);
+
+    try {
+        const response = await axios.post("http://localhost:3000/user/create", user);
+
+        return {
+            data: response.data,
+            status: response.status
+        }
+    } catch (error) {
+        console.error(error)
+    }
+
 };
 
 

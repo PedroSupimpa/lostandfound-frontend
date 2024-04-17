@@ -28,9 +28,9 @@ export const createUser = async (user: IUserRequest) => {
 };
 
 
-export const login = async (user: any) => {
+export const login = async (email:string, password:string) => {
 
-    const response = await axios.post('http://localhost:5000/login', user)
+    const response = await axios.post('http://localhost:5000/login', {email, password})
 
     return response.data
 

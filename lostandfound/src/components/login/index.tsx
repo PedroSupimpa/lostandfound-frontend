@@ -1,7 +1,7 @@
-import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { login } from "../../services/user";
 
 const loginSchema = z.object({
     email: z.string().nonempty('Email is required').email(),
@@ -14,16 +14,22 @@ type LoginSchema = z.infer<typeof loginSchema>;
 
 const Login = () => {
 
-
-
     const { register, handleSubmit, formState: { errors } } = useForm<LoginSchema>();
 
     const [isOpen, setIsOpen] = useState(false);
 
 
-    const onSubmit = (data: any) => {
-        console.log(data);
+    const handleLogin = (data: LoginSchema) => {
+        login(data.email, data.password).then((res) => {
+            if (res?.status === 200) {
+                alert('User logged in successfully');
+            } else {
+                alert('Error logging in');
+            }
+
+        });
     }
+
     return (
         <>
             <button onClick={() => setIsOpen(!isOpen)}
@@ -33,7 +39,7 @@ const Login = () => {
             {isOpen && (
 
                 <div className="max-w-md w-full mx-auto  p-5 bg-zinc-50 flex items-center justify-center rounded-md">
-                    < form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4 w-full max-w-sm">
+                    < form onSubmit={handleSubmit(handleLogin)} className="flex flex-col gap-4 w-full max-w-sm">
                         <input type="email" placeholder="Email" {...register("email")}
                             className="border border-zinc-200 shadow-sm rounded h-10 px-3" />
                         {errors.email && <span>{errors.email.message}</span>}

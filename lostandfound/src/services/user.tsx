@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const API_URL = process.env.BACKEND_URL
+const API_URL = process.env.BACKEND_URL || 'https://lost-found-api-d361.onrender.com'
 
 export interface IUserRequest {
     name: string;

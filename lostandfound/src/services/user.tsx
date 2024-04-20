@@ -33,16 +33,16 @@ export const createUser = async (user: IUserRequest) => {
 
 export const login = async (email:string, password:string) => {
 
-    const response = await axios.post(`${API_URL}/login`, {email, password})
+    const response = await axios.post(`${API_URL}/user/login`, {email, password})
 
     return response.data
 
 }
 
 
-export const updateInfo = async (user: any) => {
+export const updateInfo = async (userId:number,data:any) => {
 
-    const response = await axios.put(`${API_URL}/update`, user)
+    const response = await axios.put(`${API_URL}/${userId}`,data)
 
     return response.data
 
@@ -57,9 +57,9 @@ export const updatePassword = async (user: any) => {
 }
 
 
-export const updateAddress = async (user: any) => {
+export const updateAddress = async (userId:number,data:any) => {
 
-    const response = await axios.put(`${API_URL}/updateaddress`, user)
+    const response = await axios.put(`${API_URL}/user/address/${userId}`, data)
 
     return response.data
 

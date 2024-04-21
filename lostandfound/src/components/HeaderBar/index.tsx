@@ -1,7 +1,14 @@
+import { useNavigate } from "react-router-dom";
 import Login from "../login";
 
 
 const HeaderBar = () => {
+    const navigate = useNavigate();
+
+
+
+   
+
 
     return (
         <div>
@@ -10,10 +17,12 @@ const HeaderBar = () => {
                 <nav>
                     <ul className="flex gap-4 items-center">
                         <li>
-                            <a href="/home"  className="bg-emerald-500 rounded font-semibold text-white h-10 w-fit p-2 hover:bg-emerald-600">Home</a>
+                            <button onClick={ () => navigate('/')}
+                              className="bg-emerald-500 rounded font-semibold text-white h-10 w-fit p-2 hover:bg-emerald-600">Home</button>
                         </li>
                         <li>
-                            <a href="/signup"  className="bg-emerald-500 rounded font-semibold text-white h-10 w-fit p-2 hover:bg-emerald-600">Signup</a>
+                            <button onClick={ () => navigate('/signup')}
+                             className="bg-emerald-500 rounded font-semibold text-white h-10 w-fit p-2 hover:bg-emerald-600">Signup</button>
                         </li>
                         <li>
                         <Login/>

@@ -37,6 +37,7 @@ const Login = () => {
             >Login</button>
 
             {isOpen && (
+                    <div className="fixed inset-0 flex items-center justify-center">
 
                 <div className="max-w-md w-full mx-auto  p-5 bg-zinc-50 flex items-center justify-center rounded-md">
                     < form onSubmit={handleSubmit(handleLogin)} className="flex flex-col gap-4 w-full max-w-sm">
@@ -54,6 +55,7 @@ const Login = () => {
                                 className="bg-emerald-500 rounded font-semibold text-white h-10 w-1/3 hover:bg-emerald-600">Close</button>
                         </div>
                     </form >
+                </div>
                 </div>
 
             )}

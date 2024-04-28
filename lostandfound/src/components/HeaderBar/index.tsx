@@ -1,39 +1,68 @@
 import { useNavigate } from "react-router-dom";
 import Login from "../login";
+import { Button } from "../ui/button";
+import { ModeToggle } from "../mode-toggle";
+import {
+  Calculator,
+  Calendar,
+  CreditCard,
+  Settings,
+  Smile,
+  User,
+} from "lucide-react";
 
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+  CommandSeparator,
+  CommandShortcut,
+} from "@/components/ui/command";
+import { Input } from "../ui/input";
+import SignupForm from "../SignupForm";
 
 const HeaderBar = () => {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
+  return (
+    <header className="sticky top-0 w-full z-50 mt-1">
+      <div className="container flex h-14 max-w-screen-2xl items-center justify-between">
 
+        
+        <div className="flex md:justify-start">
 
+        <Button onClick={() => navigate("/")}>Lost&Found</Button>
+        </div>
    
 
 
-    return (
-        <div>
-            <header className="bg-slate-600 h-16 flex justify-between items-center px-4">
-                <div className="text-white font-semibold text-xl">Lost & Found</div>
-                <nav>
-                    <ul className="flex gap-4 items-center">
-                        <li>
-                            <button onClick={ () => navigate('/')}
-                              className="bg-emerald-500 rounded font-semibold text-white h-10 w-fit p-2 hover:bg-emerald-600">Home</button>
-                        </li>
-                        <li>
-                            <button onClick={ () => navigate('/signup')}
-                             className="bg-emerald-500 rounded font-semibold text-white h-10 w-fit p-2 hover:bg-emerald-600">Signup</button>
-                        </li>
-                        <li>
-                        <Login/>
-                        </li>
-                    </ul>
-                </nav>
-            </header>
+
+    
+      <div className="flex w-1/2 md:justify-center items-center py-4">
+     
+
+      <Input
+          placeholder="Filter emails..."
+          value={"Teste"}
+          onChange={()=>{}}
+         className="w-2/3"
+          />
+         
+          </div>
+ 
+       
+        <div className="flex  items-center justify-between space-x-2 md:justify-end">
+
+       <SignupForm/>
+        <Login />
+        <ModeToggle />
         </div>
-    )
-
-
-}
+      </div>
+    </header>
+  );
+};
 
 export default HeaderBar;

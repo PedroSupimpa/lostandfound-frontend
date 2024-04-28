@@ -1,7 +1,11 @@
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { login } from "../../services/user";
+import { Button } from "../ui/button";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
+import { Label } from "../ui/label";
+import { Input } from "../ui/input";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 const loginSchema = z.object({
     email: z.string().nonempty('Email is required').email(),
@@ -14,9 +18,10 @@ type LoginSchema = z.infer<typeof loginSchema>;
 
 const Login = () => {
 
-    const { register, handleSubmit, formState: { errors } } = useForm<LoginSchema>();
+    const { register, handleSubmit, formState: { errors } } = useForm<LoginSchema>({
+        resolver: zodResolver(loginSchema)
+    });
 
-    const [isOpen, setIsOpen] = useState(false);
 
 
     const handleLogin = (data: LoginSchema) => {
@@ -29,38 +34,54 @@ const Login = () => {
 
         });
     }
-
     return (
-        <>
-            <button onClick={() => setIsOpen(!isOpen)}
-                className="bg-emerald-500 rounded font-semibold text-white h-10 w-fit p-2 hover:bg-emerald-600"
-            >Login</button>
-
-            {isOpen && (
-                    <div className="fixed inset-0 flex items-center justify-center">
-
-                <div className="max-w-md w-full mx-auto  p-5 bg-zinc-50 flex items-center justify-center rounded-md">
-                    < form onSubmit={handleSubmit(handleLogin)} className="flex flex-col gap-4 w-full max-w-sm">
-                        <input type="email" placeholder="Email" {...register("email")}
-                            className="border border-zinc-200 shadow-sm rounded h-10 px-3" />
-                        {errors.email && <span>{errors.email.message}</span>}
-                        <input type="password" placeholder="Password" {...register("password")}
-                            className="border border-zinc-200 shadow-sm rounded h-10 px-3" />
-                        {errors.password && <span>{errors.password.message}</span>}
-                        <div className='flex justify-evenly'>
-                            <button type="submit"
-                                className="bg-emerald-500 rounded font-semibold text-white h-10 w-1/3 hover:bg-emerald-600">
-                                Login</button>
-                            <button type="button" onClick={() => setIsOpen(false)}
-                                className="bg-emerald-500 rounded font-semibold text-white h-10 w-1/3 hover:bg-emerald-600">Close</button>
+        <Dialog>
+            <DialogTrigger asChild>
+                <Button variant="outline">Login</Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[425px]">
+                <DialogHeader>
+                    <DialogTitle>Login</DialogTitle>
+                </DialogHeader>
+                <form onSubmit={handleSubmit(handleLogin)}>
+                    <div className="gap-4 py-4">
+                        <div className="">
+                            <Input
+                                id="email"
+                                type="email"
+                                placeholder="youremail@lostandfound.com"
+                                className={`my-3 ${errors.email ? 'border-red-500' : ''}`}
+                                {...register("email")}
+                            />
+                            {errors.email && <span className="text-red-500">{errors.email.message}</span>}
+                            <Input
+                                id="password"
+                                type="password"
+                                placeholder="Password"
+                                className={`my-3 ${errors.password ? 'border-red-500' : ''}`}
+                                {...register("password")}
+                            />
+                            {errors.password && <span className="text-red-500">{errors.password.message}</span>}
                         </div>
-                    </form >
-                </div>
-                </div>
-
-            )}
-
-        </>
+                        <div className="flex items-center gap-4 mt-4">
+                            <Label htmlFor="signup" className="text-center">
+                                <a href="#" className="text-blue-500">
+                                    Sign up
+                                </a>
+                            </Label>
+                            <Label htmlFor="forgetpassword" className="text-center">
+                                <a href="#" className="text-blue-500">
+                                    Forget password?
+                                </a>
+                            </Label>
+                        </div>
+                    </div>
+                    <DialogFooter>
+                        <Button type="submit">Log in</Button>
+                    </DialogFooter>
+                </form>
+            </DialogContent>
+        </Dialog>
     );
 }
 

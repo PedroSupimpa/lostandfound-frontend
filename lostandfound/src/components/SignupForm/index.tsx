@@ -1,8 +1,10 @@
-import { useState } from 'react';
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from 'zod';
 import { createUser } from "../../services/user";
+import { Input } from '../ui/input';
+import { Button } from '../ui/button';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
 
 const createUserSchema = z.object({
     name: z.string().nonempty('Name is required'),
@@ -19,7 +21,7 @@ const createUserSchema = z.object({
 type CreateUserSchema = z.infer<typeof createUserSchema>;
 
 const SignupForm = () => {
-    const [step, setStep] = useState(1);
+
     const { register, handleSubmit, formState: { errors } } = useForm<CreateUserSchema>({
         resolver: zodResolver(createUserSchema)
     });
@@ -36,72 +38,53 @@ const SignupForm = () => {
         );
     };
 
-    const nextStep = () => {
-        setStep((currStep) => currStep + 1);
-    };
-
-    const prevStep = () => {
-        setStep((currStep) => currStep - 1);
-    };
 
     return (
-        <main className="max-w-md w-full mx-auto  p-5 bg-zinc-50 flex items-center justify-center rounded-md">
+        <Dialog>
+        <DialogTrigger asChild>
+          <Button variant="outline">Signup</Button>
+        </DialogTrigger>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Create your account</DialogTitle>
+            </DialogHeader>
+        <main className="max-w-md w-full mx-auto  p-5flex items-center justify-center rounded-md">
             <form onSubmit={handleSubmit(handleCreateUser)} className="flex flex-col gap-4 w-full max-w-sm">
-                {step === 1 && (
+               
                     <>
-                        <input type="text" placeholder="Name" {...register("name")}
-                           className="border border-zinc-200 shadow-sm rounded h-10 px-3" />
+                        <Input type="text" placeholder="Name" {...register("name")}
+                          />
                         {errors.name && <span>{errors.name.message}</span>}
-                        <input type="tel" placeholder="Phone" {...register("phone")}
-                          className="border border-zinc-200 shadow-sm rounded h-10 px-3" />
-                        <input type="email" placeholder="Email" {...register("email")} 
-                          className="border border-zinc-200 shadow-sm rounded h-10 px-3" />
+                        <Input type="tel" placeholder="Phone" {...register("phone")}
+                           />
+                        <Input type="email" placeholder="Email" {...register("email")} 
+                           />
                         {errors.email && <span>{errors.email.message}</span>}
-                        <div className='flex justify-center'>
+                      
+                
+                        <Input type="text" placeholder="Address" {...register("address.address")} 
+                          />
+                        <Input type="text" placeholder="Number" {...register("address.number")} 
+                     />
+                        <Input type="text" placeholder="ZipCode" {...register("address.zipcode")} 
+                        />
 
-                        <button type="button" onClick={nextStep}
-                        className="bg-emerald-500 rounded font-semibold text-white h-10 w-1/3 hover:bg-emerald-600">
-                        Next</button>
-                            </div>
-                    </>
-                )}
-                {step === 2 && (
-                    <>
-                        <input type="text" placeholder="Address" {...register("address.address")} 
-                          className="border border-zinc-200 shadow-sm rounded h-10 px-3" />
-                        <input type="text" placeholder="Number" {...register("address.number")} 
-                          className="border border-zinc-200 shadow-sm rounded h-10 px-3" />
-                        <input type="text" placeholder="ZipCode" {...register("address.zipcode")} 
-                          className="border border-zinc-200 shadow-sm rounded h-10 px-3" />
-
-                        <div className='flex justify-evenly'>
-                        <button type="button" onClick={prevStep}
-                         className="bg-slate-400 rounded font-semibold text-white h-10 w-1/3 hover:bg-slate-600">
-                        Back</button>
-                        <button type="button" onClick={nextStep}
-                        className="bg-emerald-500 rounded font-semibold text-white h-10 w-1/3 hover:bg-emerald-600">
-                        Next</button>
-                        </div>
-                    </>
-                )}
-                {step === 3 && (
-                    <>
-
-                        <input type="password" placeholder="Password" {...register("password")} 
-                          className="border border-zinc-200 shadow-sm rounded h-10 px-3" />
+                      
+                        <Input type="password" placeholder="Password" {...register("password")} 
+                           />
                         {errors.password && <span>{errors.password.message}</span>}
                     <div className='flex justify-evenly'>
-                        <button type="button" onClick={prevStep}
-                          className="bg-slate-400 rounded font-semibold text-white h-10 w-1/3 hover:bg-slate-600">
-                        Back</button>
-                        <button type="submit" 
-                        className="bg-emerald-500 rounded font-semibold text-white h-10 w-1/3 hover:bg-emerald-600">
-                            Submit</button>
+                    
+                        <Button type="submit" 
+                       >
+                            Submit</Button>
                     </div>
                     </>
-                )}
+                
             </form>
         </main>
+        </DialogContent>
+        </Dialog>
     );
 };
 

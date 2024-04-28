@@ -4,7 +4,7 @@ import { z } from 'zod';
 import { createUser } from "../../services/user";
 import { Input } from '../ui/input';
 import { Button } from '../ui/button';
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
+import { Dialog, DialogContent,DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
 
 const createUserSchema = z.object({
     name: z.string().nonempty('Name is required'),

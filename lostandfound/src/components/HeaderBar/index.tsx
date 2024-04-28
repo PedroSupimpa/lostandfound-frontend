@@ -2,25 +2,6 @@ import { useNavigate } from "react-router-dom";
 import Login from "../login";
 import { Button } from "../ui/button";
 import { ModeToggle } from "../mode-toggle";
-import {
-  Calculator,
-  Calendar,
-  CreditCard,
-  Settings,
-  Smile,
-  User,
-} from "lucide-react";
-
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-  CommandSeparator,
-  CommandShortcut,
-} from "@/components/ui/command";
 import { Input } from "../ui/input";
 import SignupForm from "../SignupForm";
 

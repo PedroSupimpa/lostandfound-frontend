@@ -63,13 +63,8 @@ const Login = () => {
                             />
                             {errors.password && <span className="text-red-500">{errors.password.message}</span>}
                         </div>
-                        <div className="flex items-center gap-4 mt-4">
-                            <Label htmlFor="signup" className="text-center">
-                                <a href="#" className="text-blue-500">
-                                    Sign up
-                                </a>
-                            </Label>
-                            <Label htmlFor="forgetpassword" className="text-center">
+                        <div className="flex items-center justify-end gap-4 mt-4">
+                            <Label htmlFor="forgetpassword">
                                 <a href="#" className="text-blue-500">
                                     Forget password?
                                 </a>

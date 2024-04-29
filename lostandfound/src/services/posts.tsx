@@ -1,6 +1,7 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:5000";
+const API_URL = import.meta.env.VITE_BACKEND_URL || 'https://lost-found-api-d361.onrender.com';
+//const API_URL = "http://localhost:3000";
 
 
 
@@ -16,20 +17,29 @@ interface IPostRequest {
 }
 
 export const getPosts = async ({
-    latitude,
-    longitude,
-    locationRange,
-    category,
-    text,
-    page="1",
-    postQty="10",
-    sortPost="createdDate"
-}:IPostRequest
+  text,
+  category,
+  latitude,
+  longitude,
+  locationRange,
+  page,
+  postQty,
+  sortPost
+}: IPostRequest = {}) => {
 
-) => {
-  const response = await axios.get(
-    `${API_URL}/user/getPosts?latitude=${latitude}&longitude=${longitude}&locationRange=${locationRange}&
-    category=${category}&text=${text}&page=${page}&postQty=${postQty}&sortPost=${sortPost}`
-  );
+  const queryParams = new URLSearchParams({
+    ...(latitude && { latitude }),
+    ...(longitude && { longitude }),
+    ...(locationRange && { locationRange }),
+    ...(category && { category }),
+    ...(text && { text }),
+    ...(page && { page }),
+    ...(postQty && { postQty }),
+    ...(sortPost && { sortPost }),
+  }).toString();
+
+  const url = `${API_URL}/user/getPosts?${queryParams}`;
+
+  const response = await axios.get(url);
   return response.data;
 };

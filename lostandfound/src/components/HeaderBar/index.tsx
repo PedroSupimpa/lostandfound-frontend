@@ -2,7 +2,6 @@ import { useNavigate } from "react-router-dom";
 import Login from "../login";
 import { Button } from "../ui/button";
 import { ModeToggle } from "../mode-toggle";
-import SignupForm from "../SignupForm";
 
 const HeaderBar = () => {
   const navigate = useNavigate();
@@ -15,13 +14,13 @@ const HeaderBar = () => {
         
         <div className="flex md:justify-start">
 
-        <Button onClick={() => navigate("/")}>Lost&Found</Button>
+        <Button onClick={() => navigate("/")}>L&F</Button>
         </div>
    
        
         <div className="flex  items-center justify-between space-x-2 md:justify-end">
 
-       <SignupForm/>
+       
         <Login />
         <ModeToggle />
         </div>

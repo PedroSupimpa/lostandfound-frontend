@@ -4,6 +4,7 @@ import ItemCard from "../ItemCard";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { useEffect, useState } from "react";
 
 
 
@@ -18,35 +19,54 @@ const itensListSchema = z.object({
     sortPost: z.string().optional(),
 });
 
-//type ItensListSchema = z.infer<typeof itensListSchema>;
+type ItensListSchema = z.infer<typeof itensListSchema>;
 
 
 
 const ItemsListContainer = () => {
 
-//     const { register, handleSubmit, formState: { errors } } = useForm<ItensListSchema>({
-//         resolver: zodResolver(itensListSchema)
-//     });
+    const {  } = useForm<ItensListSchema>({
+        resolver: zodResolver(itensListSchema)
+    });
 
-//     const getPostItems = getPosts({
-//         latitude: "",
-//         longitude: "",
-//         locationRange: "",
-//         category: "",
-//         text: "",
-//         page: "1",
-//         postQty: "10",
-//         sortPost: "createdDate"
-// });
+    const [filters, setFilters] = useState({selectedCategory:"",searchText:"" ,selectedLocation:{latitude:"",longitude:"",locationRange:""}});
+    
+    const getPostItems = async () => {
+      try {
+        
+        const posts = await getPosts({
+          text: `${filters.searchText}` || "",
+          category: `${filters.selectedCategory}` || "",
+          latitude: `${filters.selectedLocation.latitude}` || "",
+          longitude: `${filters.selectedLocation.longitude}` || "",
+          locationRange: `${filters.selectedLocation.locationRange}` || "",
+          page: "1",
+          postQty: "10",
+          sortPost: "createdDate"
+        });
+       
+        return posts;
+        
+      } catch (error) {
+        console.error(error);
+        return [];
+      }
+    };
+
+    
+
+    useEffect(() => {
+      getPostItems();
+    }, [filters]);
 
     
   return (
     <div className="">
       <CategoryFilterCard
-        onUpdateFilters={(filters) => {
-          console.log(filters);
-        }}
-        />
+        onUpdateFilters={(filters: { searchText: string; selectedCategory: string;
+           selectedLocation: { latitude: string; longitude: string; locationRange: string; }; }) => 
+            setFilters(prevFilters => ({ ...prevFilters, ...filters }))}
+      />
       {Array.from({ length: 30 }).map((_, index) => {
         return <ItemCard key={index} />;
       })}

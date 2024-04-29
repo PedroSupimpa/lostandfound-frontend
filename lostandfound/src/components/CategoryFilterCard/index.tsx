@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Input } from "../ui/input";
 import {
   Select,
@@ -10,6 +10,7 @@ import {
   SelectValue,
 } from "../ui/select";
 import { Button } from "../ui/button";
+import { useDebounce } from "@uidotdev/usehooks";
 
 const categoriesList = [
   "All",
@@ -23,23 +24,37 @@ const categoriesList = [
 ];
 
 interface CategoryFilterCardProps {
-    onUpdateFilters: (filters: any) => void;
+    onUpdateFilters: (filters: { searchText: string; selectedCategory: string; selectedLocation: {latitude:string,longitude:string,locationRange:string} }) => void;
 }
 
 const CategoryFilterCard = ({ onUpdateFilters }:CategoryFilterCardProps) => {
   const isMobile = window.innerWidth < 640;
+  
+
 
   const [filters, setFilters] = useState({
     searchText: "",
-    selectedCategory: "All",
-    selectedLocation: "",
+    selectedCategory: "",
+    selectedLocation:{
+        latitude:"",
+        longitude:"",
+        locationRange:""
+    },
   });
 
-const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newFilters = { ...filters, searchText: e.target.value };
-    setFilters(newFilters);
-    onUpdateFilters(newFilters);
-};
+ 
+ const debouncedSearchTerm = useDebounce(filters.searchText, 300);
+
+ const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+     const newFilters = { ...filters, searchText: e.target.value };
+     setFilters(newFilters);
+ };
+
+ useEffect(() => {
+     const newFilters = { ...filters, searchText: debouncedSearchTerm };
+     onUpdateFilters(newFilters);
+ }, [debouncedSearchTerm]);  
+
 
 const handleCategoryChange = (category: string) => {
     const newFilters = { ...filters, selectedCategory: category };
@@ -48,7 +63,7 @@ const handleCategoryChange = (category: string) => {
 };
 
   const handleLocationClick = () => {
-    const newFilters = { ...filters, selectedLocation: "selectedLocation" };
+    const newFilters = { ...filters, selectedLocation: {latitude:"",longitude:"",locationRange:""} };
     setFilters(newFilters);
     onUpdateFilters(newFilters);
   };

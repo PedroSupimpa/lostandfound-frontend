@@ -1,6 +1,7 @@
 import axios from 'axios'
 
-const API_URL = process.env.BACKEND_URL || 'https://lost-found-api-d361.onrender.com'
+const API_URL = import.meta.env.VITE_BACKEND_URL || 'https://lost-found-api-d361.onrender.com';
+//const API_URL = "http://localhost:3000"
 
 export interface IUserRequest {
     name: string;
@@ -31,12 +32,24 @@ export const createUser = async (user: IUserRequest) => {
 };
 
 
-export const login = async (email:string, password:string) => {
+export const login = async (email: string, password: string) => {
+    try {
+        const response = await axios.post(`${API_URL}/user/login`, {email, password});
+        return response.data;
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+}
 
-    const response = await axios.post(`${API_URL}/user/login`, {email, password})
-
-    return response.data
-
+export const userAuth = async () => {
+    try {
+        const response = await axios.get(`${API_URL}/user/authentication`);
+        return response.data;
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
 }
 
 

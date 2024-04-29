@@ -18,26 +18,26 @@ const itensListSchema = z.object({
     sortPost: z.string().optional(),
 });
 
-type ItensListSchema = z.infer<typeof itensListSchema>;
+//type ItensListSchema = z.infer<typeof itensListSchema>;
 
 
 
 const ItemsListContainer = () => {
 
-    const { register, handleSubmit, formState: { errors } } = useForm<ItensListSchema>({
-        resolver: zodResolver(itensListSchema)
-    });
+//     const { register, handleSubmit, formState: { errors } } = useForm<ItensListSchema>({
+//         resolver: zodResolver(itensListSchema)
+//     });
 
-    const getPostItems = getPosts({
-        latitude: "",
-        longitude: "",
-        locationRange: "",
-        category: "",
-        text: "",
-        page: "1",
-        postQty: "10",
-        sortPost: "createdDate"
-});
+//     const getPostItems = getPosts({
+//         latitude: "",
+//         longitude: "",
+//         locationRange: "",
+//         category: "",
+//         text: "",
+//         page: "1",
+//         postQty: "10",
+//         sortPost: "createdDate"
+// });
 
     
   return (

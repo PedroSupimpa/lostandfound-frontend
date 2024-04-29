@@ -2,13 +2,12 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "../ui/card";
 
 const ItemCard = () => {
-  const isMobile = window.innerWidth < 640;
+  //const isMobile = window.innerWidth < 640;
   
   return (
     <div>

@@ -14,6 +14,10 @@ import {
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useContext, useState } from "react";
+import { AuthContext } from "@/context/authContext";
+import { useNavigate } from "react-router-dom";
+
 
 const loginSchema = z.object({
   email: z.string().nonempty("Email is required").email(),
@@ -33,15 +37,46 @@ const Login = () => {
     resolver: zodResolver(loginSchema),
   });
 
+  const navigate = useNavigate();
+
+  
+
+  const [error, setError] = useState(false);
+  const [message, setMessage] = useState("");
+  const [loading, isLoading] = useState(false);
+  const  {setIsAuth}  = useContext<any>(AuthContext);
+
   const handleLogin = (data: LoginSchema) => {
-    login(data.email, data.password).then((res) => {
-      if (res?.status === 200) {
-        alert("User logged in successfully");
-      } else {
-        alert("Error logging in");
-      }
-    });
+    isLoading(true); 
+    login(data.email, data.password)
+      .then((res) => {
+        isLoading(false); 
+        if (res.status === 200) {
+          setIsAuth(true);
+          setMessage("Login successful");
+          setError(false);
+        } else {
+          
+          if (res.data && res.data.error) {
+            setMessage(res.data.error); 
+          } else {
+            setMessage("An error occurred while logging in."); 
+          }
+          setError(true);
+        }
+      })
+      .catch((error) => {
+        isLoading(false); 
+        if (error.response && error.response.data && error.response.data.error) {
+          setMessage(error.response.data.error); 
+        } else {
+          setMessage("Network error occurred while logging in."); 
+        }
+        setError(true);
+        console.error(error); 
+      });
   };
+
 
   return (
     <Dialog>
@@ -98,6 +133,11 @@ const Login = () => {
             </div>
           </div>
           <DialogFooter>
+            <span className={`${error ? "text-red-500" : "text-green-500"}`}>
+              {message}
+            </span>
+
+
             <Button type="submit">Log in</Button>
           </DialogFooter>
         </form>

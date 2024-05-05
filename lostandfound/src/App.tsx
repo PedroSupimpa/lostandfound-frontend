@@ -5,8 +5,12 @@ import routes from './routes';
 import HeaderBar from './components/HeaderBar';
 import { ThemeProvider } from './components/theme-provider';
 
+
 const App = () => {
+
   const elements = useRoutes(routes);
+
+  
 
   return (
     

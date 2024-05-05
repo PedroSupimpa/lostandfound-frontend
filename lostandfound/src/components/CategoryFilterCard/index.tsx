@@ -27,7 +27,7 @@ interface CategoryFilterCardProps {
     onUpdateFilters: (filters: { searchText: string; selectedCategory: string; selectedLocation: {latitude:string,longitude:string,locationRange:string} }) => void;
 }
 
-const CategoryFilterCard = ({ onUpdateFilters }:CategoryFilterCardProps) => {
+const CategoryFilterCard = ({ onUpdateFilters }:CategoryFilterCardProps) => { 
   const isMobile = window.innerWidth < 640;
   
 
@@ -80,7 +80,7 @@ const handleCategoryChange = (category: string) => {
           isMobile ? "flex justify-between my-3" : "flex w-1/2 justify-evenly"
         }`}
       >
-        <Select onValueChange={handleCategoryChange}>
+        <Select  onValueChange={handleCategoryChange}>
             <SelectTrigger className="w-[180px]">
                 <SelectValue placeholder="Select a category" />
             </SelectTrigger>

@@ -16,7 +16,7 @@ import { Input } from "../ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useContext, useState } from "react";
 import { AuthContext } from "@/context/authContext";
-import { useNavigate } from "react-router-dom";
+
 
 
 const loginSchema = z.object({
@@ -37,20 +37,19 @@ const Login = () => {
     resolver: zodResolver(loginSchema),
   });
 
-  const navigate = useNavigate();
 
   
 
   const [error, setError] = useState(false);
   const [message, setMessage] = useState("");
-  const [loading, isLoading] = useState(false);
+  const [isloading, setIsLoading] = useState(false);
   const  {setIsAuth}  = useContext<any>(AuthContext);
 
   const handleLogin = (data: LoginSchema) => {
-    isLoading(true); 
+    setIsLoading(true); 
     login(data.email, data.password)
       .then((res) => {
-        isLoading(false); 
+        setIsLoading(false); 
         if (res.status === 200) {
           setIsAuth(true);
           setMessage("Login successful");
@@ -66,7 +65,7 @@ const Login = () => {
         }
       })
       .catch((error) => {
-        isLoading(false); 
+        setIsLoading(false); 
         if (error.response && error.response.data && error.response.data.error) {
           setMessage(error.response.data.error); 
         } else {
@@ -137,10 +136,10 @@ const Login = () => {
               {message}
             </span>
 
-
             <Button type="submit">Log in</Button>
           </DialogFooter>
         </form>
+        {isloading && <span>Loading...</span>}
       </DialogContent>
     </Dialog>
   );

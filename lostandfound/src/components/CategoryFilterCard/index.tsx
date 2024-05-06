@@ -11,17 +11,11 @@ import {
 } from "../ui/select";
 import { Button } from "../ui/button";
 import { useDebounce } from "@uidotdev/usehooks";
+import { getPostsCategories } from "@/services/posts";
 
-const categoriesList = [
-  "All",
-  "Electronics",
-  "Clothing",
-  "Pets",
-  "Jewelry",
-  "Furniture",
-  "Books",
-  "Other",
-];
+
+
+
 
 interface CategoryFilterCardProps {
     onUpdateFilters: (filters: { searchText: string; selectedCategory: string; selectedLocation: {latitude:string,longitude:string,locationRange:string} }) => void;
@@ -30,7 +24,14 @@ interface CategoryFilterCardProps {
 const CategoryFilterCard = ({ onUpdateFilters }:CategoryFilterCardProps) => { 
   const isMobile = window.innerWidth < 640;
   
+  const [categories, setCategories] = useState<{id:number,name:string}[]>([]);
 
+  useEffect(() => {
+    getPostsCategories().then((categories) => {
+      setCategories(categories);
+    });
+  }, []);
+  
 
   const [filters, setFilters] = useState({
     searchText: "",
@@ -81,19 +82,19 @@ const handleCategoryChange = (category: string) => {
         }`}
       >
         <Select  onValueChange={handleCategoryChange}>
-            <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Select a category" />
-            </SelectTrigger>
-            <SelectContent>
-                <SelectGroup>
-                    <SelectLabel>Categories</SelectLabel>
-                    {categoriesList.map((item) => (
-                        <SelectItem key={item} value={item}>
-                            {item}
-                        </SelectItem>
-                    ))}
-                </SelectGroup>
-            </SelectContent>
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="Select a category" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              <SelectLabel>Categories</SelectLabel>
+              {categories.map((category) => (
+                <SelectItem key={category.id} value={category.id.toString()}> 
+                  {category.name}
+                </SelectItem>
+              ))}
+            </SelectGroup>
+          </SelectContent>
         </Select>
         <Button onClick={handleLocationClick}>
             Location

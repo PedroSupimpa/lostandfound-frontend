@@ -43,3 +43,10 @@ export const getPosts = async ({
   const response = await axios.get(url);
   return response.data;
 };
+
+
+export const getPostsCategories = async () => {
+  const url = `${API_URL}/get-categories`;
+  const response = await axios.get(url);
+  return response.data;
+}

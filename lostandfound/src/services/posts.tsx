@@ -29,6 +29,14 @@ export interface Post {
   location: Location
   createdDate: string
   closedDate: any
+  category: {
+    id: number
+    name: string
+  }
+  images: {
+    imageLink:string,
+    postId: number
+  }[]
 }
 
 export interface Location {
@@ -52,7 +60,7 @@ export const getPosts = async ({
     ...(latitude && { latitude }),
     ...(longitude && { longitude }),
     ...(locationRange && { locationRange }),
-    ...(category && { category }),
+    ...(category === 'all' ? {} : { category } ),
     ...(text && { text }),
     ...(page && { page }),
     ...(postQty && { postQty }),

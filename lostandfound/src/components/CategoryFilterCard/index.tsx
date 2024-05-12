@@ -87,7 +87,11 @@ const handleCategoryChange = (category: string) => {
           </SelectTrigger>
           <SelectContent>
             <SelectGroup>
+             
+              
               <SelectLabel>Categories</SelectLabel>
+              <SelectItem value="all">All</SelectItem>
+
               {categories.map((category) => (
                 <SelectItem key={category.id} value={category.id.toString()}> 
                   {category.name}

@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import {
   Card,
   CardContent,
@@ -5,31 +6,65 @@ import {
   CardHeader,
   CardTitle,
 } from "../ui/card";
+import { Skeleton } from "../ui/skeleton";
+import { Post } from "@/services/posts";
 
-const ItemCard = () => {
-  //const isMobile = window.innerWidth < 640;
+interface ItemCardProps {
+  postData: Post;
+}
+
+const ItemCard = ({ postData }: ItemCardProps) => {
+  const [isLoading, setIsLoading] = useState(true);
+
+  const isMobile = window.innerWidth < 768;
+
+  useEffect(() => {
+    if (postData) {
+      setIsLoading(false);
+    }
+  }, [postData]);
+
   
-  return (
+
+  
+
+  return isLoading ? (
     <div>
       <Card className="m-6 flex md:container md:mx-auto">
-      <CardContent className="relative bg-green-500 w-full  md:w-[15vw]  md:pb-[10vw] overflow-hidden">
-    <img src="https://img.olx.com.br/images/47/474498270049169.jpg" alt="" className="absolute top-0 left-0 h-full w-full object-cover" />
-  </CardContent>
-        <div className="m-2">
-          <CardHeader className="h-1/3">
-            <CardTitle>Item Title</CardTitle>
-          </CardHeader>
-          <CardDescription className="overflow-hidden h-1/3">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Perferendis
-            minus officiis illum ab rerum, voluptas cumque ex eos culpa hic?
-            Omnis, ad voluptatibus est saepe nulla quidem adipisci accusamus
-            ipsam.
-          </CardDescription>
-          <div className="px-5 flex items-baseline justify-end gap-4 h-1/3">
-            <p>category</p>
-            <p>City-State</p>
-          </div>
+        <div className="flex  space-x-4 p-4 w-full">
+          <Skeleton className="h-[120px] w-[130px] " />
+          <div className="space-y-2 w-full">
+            <Skeleton className="h-10 w-[40%]" />
 
+            <Skeleton className="h-4 w-[50%]" />
+            <Skeleton className="h-4 w-[50%]" />
+          </div>
+        </div>
+      </Card>
+    </div>
+  ) : (
+    <div key={postData.id}>
+      <Card className={`my-5 flex md:container md:mx-auto ${isMobile ? 'h-[28vw]':'h-[10vw]'}`}>
+        <CardContent className="relative min-w-[120px] md:w-[15vw] md:pb-[10vw] overflow-hidden">
+          <img
+            src={ ` ${postData ? postData.images.map((image) => image.imageLink)[0] : '/images/placeholder.png'}`}
+            alt=""
+            className="absolute top-0 left-0 h-full w-full object-cover"
+          />
+        </CardContent>
+        <div className="m-2 w-full flex flex-col">
+          <CardHeader className="flex flex-grow p-0">
+            <CardTitle>{postData.title}</CardTitle>
+          </CardHeader>
+          {!isMobile && (
+            <CardDescription className="flex-grow overflow-hidden">
+              {postData.description}
+            </CardDescription>
+          )}
+          <div className="flex flex-grow-0 h-[20%] items-end justify-between p-0 overflow-hidden">
+            <p>{"Taguatinga - DF"}</p>
+            <p>{postData.category.name}</p>
+          </div>
         </div>
       </Card>
     </div>

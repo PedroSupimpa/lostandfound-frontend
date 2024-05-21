@@ -26,8 +26,6 @@ const ItemCard = ({ postData }: ItemCardProps) => {
 
   
 
-  
-
   return isLoading ? (
     <div>
       <Card className="m-6 flex md:container md:mx-auto">

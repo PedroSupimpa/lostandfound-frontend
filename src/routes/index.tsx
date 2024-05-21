@@ -1,4 +1,6 @@
+import CreatePost from '@/pages/CreatePost/createPost';
 import Profile from '@/pages/Profile/profile';
+import MyPosts from '@/pages/myposts/myposts';
 import { lazy } from 'react';
 import { RouteObject } from 'react-router-dom';
 
@@ -14,6 +16,10 @@ const routes: RouteObject[] = [
     {
         path: '/profile',
         element: <Profile />,
+    },
+    {
+        path: '/myposts',
+        element: <MyPosts />,
     }
 
 ];

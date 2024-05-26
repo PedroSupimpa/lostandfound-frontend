@@ -11,6 +11,7 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import CreatePost from "@/pages/CreatePost/createPost";
 
 const HeaderBar = () => {
   const navigate = useNavigate();
@@ -28,7 +29,7 @@ const HeaderBar = () => {
             <>
               <Button>My posts</Button>
               <Button>Chat</Button>
-              <Button>Make a post</Button>
+              <CreatePost/>
 
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>

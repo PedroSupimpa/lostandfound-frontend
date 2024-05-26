@@ -51,7 +51,7 @@ const SignupForm = () => {
         <main className="max-w-md w-full mx-auto  p-5flex items-center justify-center rounded-md">
             <form onSubmit={handleSubmit(handleCreateUser)} className="flex flex-col gap-4 w-full max-w-sm">
                
-                    <>
+                   
                         <Input type="text" placeholder="Name" {...register("name")}
                           />
                         {errors.name && <span>{errors.name.message}</span>}
@@ -79,7 +79,7 @@ const SignupForm = () => {
                        >
                             Submit</Button>
                     </div>
-                    </>
+                   
                 
             </form>
         </main>

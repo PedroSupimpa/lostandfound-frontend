@@ -1,4 +1,4 @@
-import CreatePost from '@/pages/CreatePost/createPost';
+
 import Profile from '@/pages/Profile/profile';
 import MyPosts from '@/pages/myposts/myposts';
 import { lazy } from 'react';

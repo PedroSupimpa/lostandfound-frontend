@@ -3,14 +3,15 @@ import { initializeApp } from "firebase/app";
 import { getStorage } from "firebase/storage";
 
 
+
 const firebaseConfig = {
-  apiKey: "AIzaSyAkKz-elwIq_PeWHK6E4KdZy91OzPDYe00",
-  authDomain: "lostandfound-211e2.firebaseapp.com",
-  projectId: "lostandfound-211e2",
-  storageBucket: "lostandfound-211e2.appspot.com",
-  messagingSenderId: "210598248940",
-  appId: "1:210598248940:web:98fd74776013eb1d1140c9",
-  measurementId: "G-P0P11Q6HK2"
+  apiKey: import.meta.env.FIREBASE_API_KEY,
+  authDomain: import.meta.env.FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.FIREBASE_APP_ID,
+  measurementId: import.meta.env.FIREBASE_MEASUREMENT_ID
 };
 
 

@@ -1,4 +1,3 @@
-import { CreatePostSchema } from "@/pages/CreatePost/createPost";
 import axios from "axios";
 
 const API_URL = import.meta.env.VITE_BACKEND_URL || 'https://lost-found-api-d361.onrender.com';
@@ -85,7 +84,16 @@ export const getPostsCategories = async () => {
   return response.data;
 }
 
-export const createPost = async (data:CreatePostSchema,postId:number) => {
+interface CreatePost {
+  title: string;
+  description?: string;
+  category: {id:number};
+  latitude?: string;
+  longitude?: string;
+  locationRange?: string;
+}
+
+export const createPost = async (data:CreatePost,postId:number) => {
 
   const url = `${API_URL}/user/createPost/${postId}`;
   try {

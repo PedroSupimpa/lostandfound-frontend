@@ -92,6 +92,7 @@ const CreatePost = () => {
             placeholder="title"
             className={`my-3 `}
           />
+          {errors.title && <span>{errors.title.message}</span>}
 
           <div className="flex justify-between">
             <div className="w-1/2">

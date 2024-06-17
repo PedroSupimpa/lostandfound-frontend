@@ -57,7 +57,7 @@ const ItemsListContainer = () => {
   }, [filters]);
 
   return (
-    <div className="">
+    <div className="w-full">
       <CategoryFilterCard
         onUpdateFilters={(
           filters: {

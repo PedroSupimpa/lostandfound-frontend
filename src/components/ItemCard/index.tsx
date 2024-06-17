@@ -45,7 +45,7 @@ const ItemCard = ({ postData }: ItemCardProps) => {
       <Card className={`my-5 flex md:container md:mx-auto ${isMobile ? 'h-[28vw]':'h-[10vw]'}`}>
         <CardContent className="relative min-w-[120px] md:w-[15vw] md:pb-[10vw] overflow-hidden">
           <img
-            src={ ` ${postData ? postData.images.map((image) => image.imageLink)[0] : '/images/placeholder.png'}`}
+            src={ ` ${postData ? postData?.images?.map((image) => image.imageLink)[0] : '/images/placeholder.png'}`}
             alt=""
             className="absolute top-0 left-0 h-full w-full object-cover"
           />

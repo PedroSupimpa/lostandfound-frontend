@@ -1,7 +1,8 @@
-import { Card } from "@/components/ui/card";
+import LocationSearch from "@/components/LocationSearch/location-seach";
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-
 import {
   Select,
   SelectContent,
@@ -11,32 +12,27 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useEffect, useState } from "react";
-import { z } from "zod";
-import { Controller, useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { Textarea } from "@/components/ui/textarea";
 import { createPost, getPostsCategories, saveImageLink } from "@/services/posts";
 import { firebaseFileUpload } from "@/utils/firabase-file-upload";
-import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Textarea } from "@/components/ui/textarea";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect, useState } from "react";
+import { Controller, useForm } from "react-hook-form";
+import { z } from "zod";
 
 const createPostSchema = z.object({
   title: z.string(),
   description: z.string(),
   category: z.number(),
-  location: z.any(),
+ location:z.any().optional(),
 });
 
 export type CreatePostSchema = z.infer<typeof createPostSchema>;
 
 const CreatePost = () => {
-  const isMobile = window.innerWidth < 640;
   const [images, setImages] = useState<File[]>([]);
-  const [categories, setCategories] = useState<{ id: number; name: string }[]>(
-    []
-  );
-
+  const [categories, setCategories] = useState<{ id: number; name: string }[]>([]);
+  const [location, setLocation] = useState<{ latitude: number; longitude: number; locationRange: number }>();
 
   const {
     control,
@@ -48,17 +44,26 @@ const CreatePost = () => {
   });
 
   const handleCreatePost = async (data: CreatePostSchema) => {
-    data.location = "(11.2, 75.5)";
-    const postCreation = await createPost(data,1);
-    
+    if (!location) {
+      // Handle error: location not set
+      return;
+    }
+
+    const payload = {
+      ...data,
+      location:`(${location.latitude}, ${location.longitude})`,
+      category:{id:data.category},
+    };
+
+    const postCreation = await createPost(payload, 1);
+
     if (postCreation.status === 200 && images.length > 0) {
       firebaseFileUpload(images).then((urls) => {
         urls.forEach((url) => {
-          saveImageLink(postCreation.data.id,url).then((res) => {
+          saveImageLink(postCreation.data.id, url).then((res) => {
             console.log(res);
           });
         });
-        
       });
     }
   };
@@ -69,27 +74,17 @@ const CreatePost = () => {
     });
   }, []);
 
-
-
-
-
-  
-  
-
   return (
     <Dialog>
-    <DialogTrigger asChild>
-      <Button variant="outline">Create Post</Button>
-    </DialogTrigger>
-    <DialogContent className="md:max-w-[2/3] h-auto">
-      <DialogHeader>
-        <DialogTitle>Create a new Post</DialogTitle>
+      <DialogTrigger asChild>
+        <Button variant="outline">Create Post</Button>
+      </DialogTrigger>
+      <DialogContent className="md:max-w-[2/3] h-auto">
+        <DialogHeader>
+          <DialogTitle>Create a new Post</DialogTitle>
         </DialogHeader>
-    
-      <form
-        onSubmit={handleSubmit(handleCreatePost)}
-      >
-       
+
+        <form onSubmit={handleSubmit(handleCreatePost)}>
           <Label htmlFor="Title">Title</Label>
           <Input
             {...register("title")}
@@ -97,58 +92,51 @@ const CreatePost = () => {
             placeholder="title"
             className={`my-3 `}
           />
-        
 
           <div className="flex justify-between">
-
-          <div className="w-[50%]">
-
-          <Label htmlFor="Category">Category</Label>
-          <Controller
-            control={control}
-            name="category"
-            render={({ field: { onChange } }) => (
-              <Select
-              onValueChange={(selectedValue) =>
-                onChange(parseInt(selectedValue))
-              }
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select a category" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    <SelectLabel>Categories</SelectLabel>
-                    {categories.map((category) => (
-                      <SelectItem
-                      key={category.id}
-                      value={category.id.toString()}
-                      >
-                        {category.name}
-                      </SelectItem>
-                    ))}
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-            )}
-            />
+            <div className="w-1/2">
+              <Label htmlFor="Category">Category</Label>
+              <Controller
+                control={control}
+                name="category"
+                render={({ field: { onChange } }) => (
+                  <Select
+                    onValueChange={(selectedValue) =>
+                      onChange(parseInt(selectedValue))
+                    }
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select a category" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectLabel>Categories</SelectLabel>
+                        {categories.map((category) => (
+                          <SelectItem
+                            key={category.id}
+                            value={category.id.toString()}
+                          >
+                            {category.name}
+                          </SelectItem>
+                        ))}
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                )}
+              />
             </div>
-            <div>
-
-          <Label htmlFor="Location">Location</Label>
-          <Input  type="text" placeholder="location" {...register('location')}/>
-
+            <div className="flex  flex-col justify-between">
+              <Label htmlFor="Location">Location</Label>
+              <LocationSearch
+              title="Select location"
+              setGeoLocation={setLocation}
+              hasRadius={false} />
             </div>
-            </div>
-            
-            <Label htmlFor="Description">Description</Label>
-            
-            <Textarea 
-            {...register("description")}
-            
-            />
-          
-          
+          </div>
+
+          <Label htmlFor="Description">Description</Label>
+          <Textarea {...register("description")} />
+
           <Label htmlFor="Images">Images</Label>
           <Input
             id="images"
@@ -162,16 +150,13 @@ const CreatePost = () => {
               }
             }}
           />
-          
 
-          <div className=" flex justify-center items-center mt-5">
-            <Button   className="w-[35%]" type="submit">Create</Button>
+          <div className="flex justify-center items-center mt-5">
+            <Button className="w-1/4" type="submit">Create</Button>
           </div>
-        
-      </form>
-      
-        </DialogContent>
-        </Dialog>
+        </form>
+      </DialogContent>
+    </Dialog>
   );
 };
 

@@ -1,10 +1,10 @@
 import { IPostResponse, getPosts } from "@/services/posts";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 import CategoryFilterCard from "../CategoryFilterCard";
 import ItemCard from "../ItemCard";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { useEffect, useState } from "react";
 
 const itensListSchema = z.object({
   latitude: z.string().optional(),

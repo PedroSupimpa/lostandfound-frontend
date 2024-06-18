@@ -73,9 +73,22 @@ export const getPosts = async ({
 
   return response.data;
 
-
-
 };
+
+
+export const getUserPosts = async () => {
+  const url = `${API_URL}/user/Posts`;
+
+  try{
+    const response = await axios.get<IPostResponse>(url,{
+      withCredentials: true,
+      
+    });
+    return response.data;
+  }catch(error){
+    return {posts:[],totalPages:0};
+  }
+}
 
 
 export const getPostsCategories = async () => {
@@ -93,9 +106,9 @@ interface CreatePost {
   locationRange?: string;
 }
 
-export const createPost = async (data:CreatePost,postId:number) => {
+export const createPost = async (data:CreatePost) => {
 
-  const url = `${API_URL}/user/createPost/${postId}`;
+  const url = `${API_URL}/user/createPost`;
   try {
     const response = await axios.post(url, data, {
       withCredentials: true,

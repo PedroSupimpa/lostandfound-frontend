@@ -1,4 +1,4 @@
-import axios from 'axios'
+import axios from 'axios';
 
 const API_URL = import.meta.env.VITE_BACKEND_URL || 'https://lost-found-api-d361.onrender.com';
 //const API_URL = "http://localhost:3000"
@@ -32,11 +32,14 @@ export const createUser = async (user: IUserRequest) => {
 };
 
 
-export const login = async (email: string, password: string) => {
+export const login = async (email:string, password:string) => {
     try {
         const response = await axios.post(`${API_URL}/user/login`, { email, password }, {
             withCredentials: true
         });
+        
+     
+        localStorage.setItem('token', response.data.token);
         
         return {
             data: response.data,
@@ -47,6 +50,17 @@ export const login = async (email: string, password: string) => {
         console.error(error);
         throw error;
     }
+}
+
+export const logout = () => {
+    
+    localStorage.removeItem('token');
+
+    
+    document.cookie = 'token=; Max-Age=0; path=/; domain=yourdomain.com;';
+
+    
+    window.location.reload();
 }
 
 export const userAuth = async () => {

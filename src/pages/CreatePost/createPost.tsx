@@ -55,7 +55,7 @@ const CreatePost = () => {
       category:{id:data.category},
     };
 
-    const postCreation = await createPost(payload, 1);
+    const postCreation = await createPost(payload);
 
     if (postCreation.status === 200 && images.length > 0) {
       firebaseFileUpload(images).then((urls) => {

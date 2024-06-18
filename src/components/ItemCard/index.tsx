@@ -1,3 +1,5 @@
+import { Post } from "@/services/posts";
+import getLocationName from "@/utils/getLocationName";
 import { useEffect, useState } from "react";
 import {
   Card,
@@ -7,7 +9,6 @@ import {
   CardTitle,
 } from "../ui/card";
 import { Skeleton } from "../ui/skeleton";
-import { Post } from "@/services/posts";
 
 interface ItemCardProps {
   postData: Post;
@@ -15,17 +16,25 @@ interface ItemCardProps {
 
 const ItemCard = ({ postData }: ItemCardProps) => {
   const [isLoading, setIsLoading] = useState(true);
+  const [locationName, setLocationName] = useState("");
 
   const isMobile = window.innerWidth < 768;
 
+ 
+
   useEffect(() => {
-    if (postData) {
-      setIsLoading(false);
-    }
+    const fetchLocationName = async () => {
+      if (postData && postData.location) {
+        const name = await getLocationName(postData.location.x, postData.location.y);
+        setLocationName(name);
+        setIsLoading(false);
+      }
+    };
+
+    fetchLocationName();
   }, [postData]);
-
   
-
+  getLocationName(postData.location.x,postData.location.y)
   return isLoading ? (
     <div>
       <Card className="m-6 flex md:container md:mx-auto">
@@ -60,7 +69,7 @@ const ItemCard = ({ postData }: ItemCardProps) => {
             </CardDescription>
           )}
           <div className="flex flex-grow-0 h-[20%] items-end justify-between p-0 overflow-hidden">
-            <p>{"Taguatinga - DF"}</p>
+          <p>{locationName}</p>
             <p>{postData.category.name}</p>
           </div>
         </div>

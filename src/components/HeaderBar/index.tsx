@@ -1,21 +1,23 @@
-import { useNavigate } from "react-router-dom";
-import Login from "../login";
-import { Button } from "../ui/button";
-import { ModeToggle } from "../mode-toggle";
-import { useContext } from "react";
 import { AuthContext } from "@/context/authContext";
+import CreatePost from "@/pages/CreatePost/createPost";
+import { logout } from "@/services/user";
+import { useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import SignupForm from "../SignupForm";
+import Login from "../login";
+import { ModeToggle } from "../mode-toggle";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { Button } from "../ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import CreatePost from "@/pages/CreatePost/createPost";
 
 const HeaderBar = () => {
   const navigate = useNavigate();
-  const { isAuth, setIsAuth } = useContext<any>(AuthContext);
+  const { isAuth } = useContext<any>(AuthContext);
 
   return (
     <header className="sticky top-0 w-full z-50 mt-1 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -27,7 +29,7 @@ const HeaderBar = () => {
         <div className="flex  items-center justify-between space-x-2 md:justify-end">
           {isAuth ? (
             <>
-              <Button>My posts</Button>
+              <Button onClick={()=> navigate("/myposts")}>My posts</Button>
               <Button>Chat</Button>
               <CreatePost/>
 
@@ -35,8 +37,8 @@ const HeaderBar = () => {
                 <DropdownMenuTrigger asChild>
                   <Avatar>
                     <AvatarImage
-                      src="https://github.com/pedrosupimpa.png"
-                      alt="@shadcn"
+                      src="https://avatars.dicebear.com/api/avataaars/123.svg"
+                      alt=""
                     />
                     <AvatarFallback>CN</AvatarFallback>
                   </Avatar>
@@ -51,7 +53,7 @@ const HeaderBar = () => {
                   </DropdownMenuItem>
                   <DropdownMenuItem
                     onClick={() => {
-                      setIsAuth(false), navigate("/");
+                      logout(), navigate("/");
                     }}
                   >
                     Logout
@@ -61,6 +63,7 @@ const HeaderBar = () => {
             </>
           ) : (
             <>
+            <SignupForm />
               <Login />
               <ModeToggle />
             </>

@@ -2,6 +2,7 @@ import useLoadGoogleMaps from "@/utils/useLoadGoogleMaps";
 import { Autocomplete, GoogleMap, Marker } from "@react-google-maps/api";
 import { MapPin } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Button } from "../ui/button";
 import {
   Dialog,
@@ -44,26 +45,40 @@ const radiusOptions = [
 interface LocationSearchProps {
   title?: string;
   setGeoLocation: React.Dispatch<
-    React.SetStateAction<{
-      latitude: number;
-      longitude: number;
-      locationRange: number;
-    } | undefined>
+    React.SetStateAction<
+      | {
+          latitude: number;
+          longitude: number;
+          locationRange: number;
+        }
+      | undefined
+    >
   >;
   hasRadius: boolean;
 }
 
-const LocationSearch = ({ title, setGeoLocation, hasRadius }: LocationSearchProps) => {
-  const isLoaded = useLoadGoogleMaps(import.meta.env.VITE_GOOGLE_MAPS_API_KEY as string);
+const LocationSearch = ({
+  title,
+  setGeoLocation,
+  hasRadius,
+}: LocationSearchProps) => {
+  const { t } = useTranslation();
+  const isLoaded = useLoadGoogleMaps(
+    import.meta.env.VITE_GOOGLE_MAPS_API_KEY as string,
+  );
   const [open, setOpen] = useState(false);
 
   const [map, setMap] = useState<google.maps.Map | null>(null);
-  const [position, setPosition] = useState<google.maps.LatLngLiteral>(defaultCenter);
+  const [position, setPosition] =
+    useState<google.maps.LatLngLiteral>(defaultCenter);
   const [radius, setRadius] = useState<number>(5000); // 5 km initial radius
   const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null);
   const [circle, setCircle] = useState<google.maps.Circle | null>(null);
 
-  const calculateBounds = (position: google.maps.LatLngLiteral, radius: number): google.maps.LatLngBounds | null => {
+  const calculateBounds = (
+    position: google.maps.LatLngLiteral,
+    radius: number,
+  ): google.maps.LatLngBounds | null => {
     if (!window.google) {
       return null;
     }
@@ -118,7 +133,7 @@ const LocationSearch = ({ title, setGeoLocation, hasRadius }: LocationSearchProp
         },
         () => {
           setPosition(defaultCenter);
-        }
+        },
       );
     } else {
       setPosition(defaultCenter);
@@ -145,7 +160,9 @@ const LocationSearch = ({ title, setGeoLocation, hasRadius }: LocationSearchProp
     }
   };
 
-  const onLoadAutocomplete = (autocomplete: google.maps.places.Autocomplete) => {
+  const onLoadAutocomplete = (
+    autocomplete: google.maps.places.Autocomplete,
+  ) => {
     autocompleteRef.current = autocomplete;
   };
 
@@ -159,24 +176,32 @@ const LocationSearch = ({ title, setGeoLocation, hasRadius }: LocationSearchProp
   };
 
   const handleSubmit = () => {
-    setGeoLocation({ latitude: position.lat, longitude: position.lng, locationRange: hasRadius ? radius : 0 });
-    setOpen(false); 
+    setGeoLocation({
+      latitude: position.lat,
+      longitude: position.lng,
+      locationRange: hasRadius ? radius : 0,
+    });
+    setOpen(false);
   };
 
-  if (!isLoaded) return <Button>Loading...</Button>;
+  if (!isLoaded) return <Button>{t("location.loading")}</Button>;
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" onClick={() => setOpen(true)} className="gap-2">
+        <Button
+          variant="outline"
+          onClick={() => setOpen(true)}
+          className="gap-2"
+        >
           {title}
-        <MapPin size={24} />
+          <MapPin size={24} />
         </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Location selection</DialogTitle>
-          <DialogDescription>Select a location on the map</DialogDescription>
+          <DialogTitle>{t("location.title")}</DialogTitle>
+          <DialogDescription>{t("location.description")}</DialogDescription>
         </DialogHeader>
         <div style={{ position: "relative", width: "100%", height: "100%" }}>
           <div className="flex justify-between gap-3 py-3">
@@ -185,18 +210,24 @@ const LocationSearch = ({ title, setGeoLocation, hasRadius }: LocationSearchProp
               onPlaceChanged={onPlaceChanged}
               className="w-2/3"
             >
-              <Input type="text" placeholder="Search for location" />
+              <Input
+                type="text"
+                placeholder={t("location.searchPlaceholder")}
+              />
             </Autocomplete>
             {hasRadius && (
               <div className="flex w-1/3">
                 <Select onValueChange={handleRadiusChange}>
                   <SelectTrigger className="w-[180px]">
-                    <SelectValue placeholder="Select the radius" />
+                    <SelectValue placeholder={t("location.selectRadius")} />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectGroup>
                       {radiusOptions.map((option) => (
-                        <SelectItem key={option.value} value={option.value.toString()}>
+                        <SelectItem
+                          key={option.value}
+                          value={option.value.toString()}
+                        >
                           {option.text}
                         </SelectItem>
                       ))}
@@ -206,7 +237,7 @@ const LocationSearch = ({ title, setGeoLocation, hasRadius }: LocationSearchProp
               </div>
             )}
           </div>
-      
+
           <GoogleMap
             mapContainerStyle={containerStyle}
             center={position}
@@ -218,7 +249,7 @@ const LocationSearch = ({ title, setGeoLocation, hasRadius }: LocationSearchProp
         </div>
         <DialogFooter>
           <Button type="button" onClick={handleSubmit}>
-            Select
+            {t("location.select")}
           </Button>
         </DialogFooter>
       </DialogContent>

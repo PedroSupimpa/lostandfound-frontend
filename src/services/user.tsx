@@ -1,100 +1,134 @@
-import axios from 'axios';
-
-const API_URL = import.meta.env.VITE_BACKEND_URL || 'https://lost-found-api-d361.onrender.com';
-//const API_URL = "http://localhost:3000"
+import {
+  createUser as createLocalUser,
+  loginUser as loginLocalUser,
+  getCurrentUser,
+} from "@/utils/localStorage";
 
 export interface IUserRequest {
-    name: string;
-    phone?: string;
-    email: string;
-    password: string;
-    address?: {
-        zipcode: string;
-        address: string;
-        number: string;
-    };
+  name: string;
+  phone?: string;
+  email: string;
+  password: string;
+  address?: {
+    zipcode: string;
+    address: string;
+    number: string;
+  };
 }
-
 
 export const createUser = async (user: IUserRequest) => {
-
-    try {
-        const response = await axios.post(`${API_URL}/user/create`, user);
-
-        return {
-            data: response.data,
-            status: response.status
-        }
-    } catch (error) {
-        console.error(error)
-    }
-
+  try {
+    // Create user in localStorage
+    return createLocalUser(user);
+  } catch (error) {
+    console.error(error);
+    return {
+      status: 500,
+      data: { error: "An error occurred while creating user" },
+    };
+  }
 };
 
+export const login = async (email: string, password: string) => {
+  try {
+    // Login user using localStorage
+    const result = loginLocalUser(email, password);
 
-export const login = async (email:string, password:string) => {
-    try {
-        const response = await axios.post(`${API_URL}/user/login`, { email, password }, {
-            withCredentials: true
-        });
-        
-     
-        localStorage.setItem('token', response.data.token);
-        
-        return {
-            data: response.data,
-            status: response.status
-        };
-        
-    } catch (error) {
-        console.error(error);
-        throw error;
+    if (result.status === 200 && result.data.token) {
+      // Store token in localStorage
+      localStorage.setItem("token", result.data.token);
     }
-}
+
+    return result;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
 
 export const logout = () => {
-    
-    localStorage.removeItem('token');
+  // Remove token from localStorage
+  localStorage.removeItem("token");
 
-    
-    document.cookie = 'token=; Max-Age=0; path=/; domain=yourdomain.com;';
-
-    
-    window.location.reload();
-}
+  // Reload page to reset state
+  window.location.reload();
+};
 
 export const userAuth = async () => {
-    try {
-        const response = await axios.get(`${API_URL}/user/authentication`);
-        return response.data;
-    } catch (error) {
-        console.error(error);
-        throw error;
+  try {
+    // Get current user from localStorage
+    const user = getCurrentUser();
+    return user ? { authenticated: true, user } : { authenticated: false };
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
+export const updateInfo = async (userId: number, data: any) => {
+  try {
+    const storedUsers = localStorage.getItem("users");
+    const users = storedUsers ? JSON.parse(storedUsers) : [];
+
+    const userIndex = users.findIndex((user: any) => user.id === userId);
+    if (userIndex !== -1) {
+      users[userIndex] = { ...users[userIndex], ...data };
+      localStorage.setItem("users", JSON.stringify(users));
+      return { status: 200, data: { message: "User updated successfully" } };
     }
-}
 
+    return { status: 404, data: { error: "User not found" } };
+  } catch (error) {
+    console.error(error);
+    return { status: 500, data: { error: "An error occurred" } };
+  }
+};
 
-export const updateInfo = async (userId:number,data:any) => {
+export const updatePassword = async (data: {
+  userId: number;
+  oldPassword: string;
+  newPassword: string;
+}) => {
+  try {
+    const storedUsers = localStorage.getItem("users");
+    const users = storedUsers ? JSON.parse(storedUsers) : [];
 
-    const response = await axios.put(`${API_URL}/${userId}`,data)
+    const userIndex = users.findIndex(
+      (user: any) =>
+        user.id === data.userId && user.password === data.oldPassword,
+    );
 
-    return response.data
+    if (userIndex !== -1) {
+      users[userIndex].password = data.newPassword;
+      localStorage.setItem("users", JSON.stringify(users));
+      return {
+        status: 200,
+        data: { message: "Password updated successfully" },
+      };
+    }
 
-}
+    return { status: 400, data: { error: "Invalid old password" } };
+  } catch (error) {
+    console.error(error);
+    return { status: 500, data: { error: "An error occurred" } };
+  }
+};
 
-export const updatePassword = async (user: any) => {
+export const updateAddress = async (userId: number, data: any) => {
+  try {
+    const storedUsers = localStorage.getItem("users");
+    const users = storedUsers ? JSON.parse(storedUsers) : [];
 
-    const response = await axios.put(`${API_URL}/updatepassword`, user)
+    const userIndex = users.findIndex((user: any) => user.id === userId);
+    if (userIndex !== -1) {
+      users[userIndex].address = { ...users[userIndex].address, ...data };
+      localStorage.setItem("users", JSON.stringify(users));
+      return { status: 200, data: { message: "Address updated successfully" } };
+    }
 
-    return response.data
-
-}
-
-
-export const updateAddress = async (userId:number,data:any) => {
-
-    const response = await axios.put(`${API_URL}/user/address/${userId}`, data)
-
-    return response.data
-
-}
+    return { status: 404, data: { error: "User not found" } };
+  } catch (error) {
+    console.error(error);
+    return { status: 500, data: { error: "An error occurred" } };
+  }
+};

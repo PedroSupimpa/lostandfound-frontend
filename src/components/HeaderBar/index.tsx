@@ -87,7 +87,7 @@ const HeaderBar = () => {
                 <span className="hidden md:inline">{t("header.newPost")}</span>
               </Button>
 
-              <LanguageSwitcher />
+              {/* <LanguageSwitcher /> */}
               <ModeToggle />
 
               <DropdownMenu>

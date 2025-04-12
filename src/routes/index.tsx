@@ -1,6 +1,7 @@
 import Profile from "@/pages/Profile/profile";
 import MyPosts from "@/pages/myposts/myposts";
 import CreatePost from "@/pages/CreatePost/createPost";
+import Messages from "@/pages/Messages/messages";
 import { lazy } from "react";
 import { RouteObject } from "react-router-dom";
 
@@ -22,6 +23,10 @@ const routes: RouteObject[] = [
   {
     path: "/create-post",
     element: <CreatePost />,
+  },
+  {
+    path: "/messages",
+    element: <Messages />,
   },
 ];
 

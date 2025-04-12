@@ -72,7 +72,10 @@ const ItemCard = ({ postData }: ItemCardProps) => {
 
   const handleContactOwner = () => {
     console.log("Contact owner for post:", postData.id);
-    // This would open the chat with the post owner
+    // Navigate to messages page with the post owner's contact info
+    navigate(
+      `/messages?contactId=${postData.userId || "default"}&postId=${postData.id}`,
+    );
   };
 
   return isLoading ? (

@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import SignupForm from "../SignupForm";
 import Login from "../login";
 import { ModeToggle } from "../mode-toggle";
+import { LanguageSwitcher } from "../language-switcher";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Button } from "../ui/button";
 import {
@@ -16,10 +17,12 @@ import {
 } from "../ui/dropdown-menu";
 import { Search, PlusCircle, MessageCircle, User, LogOut } from "lucide-react";
 import { Input } from "../ui/input";
+import { useTranslation } from "react-i18next";
 
 const HeaderBar = () => {
   const navigate = useNavigate();
   const { isAuth, user } = useContext<any>(AuthContext);
+  const { t } = useTranslation();
 
   const getInitials = (name: string) => {
     return name
@@ -38,13 +41,13 @@ const HeaderBar = () => {
             variant="ghost"
             className="text-xl font-bold"
           >
-            Lost & Found
+            {t("app.name")}
           </Button>
 
           <div className="hidden md:flex items-center ml-4 relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
-              placeholder="Search lost items..."
+              placeholder={t("header.search")}
               className="pl-10 w-[200px] lg:w-[300px]"
               onClick={() => navigate("/")}
             />
@@ -61,7 +64,7 @@ const HeaderBar = () => {
                 onClick={() => navigate("/myposts")}
               >
                 <User className="h-4 w-4" />
-                My Posts
+                {t("header.myPosts")}
               </Button>
 
               <Button
@@ -71,7 +74,7 @@ const HeaderBar = () => {
                 onClick={() => navigate("/messages")}
               >
                 <MessageCircle className="h-4 w-4" />
-                Messages
+                {t("header.messages")}
               </Button>
 
               <Button
@@ -81,9 +84,10 @@ const HeaderBar = () => {
                 onClick={() => navigate("/create-post")}
               >
                 <PlusCircle className="h-4 w-4" />
-                <span className="hidden md:inline">New Post</span>
+                <span className="hidden md:inline">{t("header.newPost")}</span>
               </Button>
 
+              <LanguageSwitcher />
               <ModeToggle />
 
               <DropdownMenu>
@@ -110,15 +114,15 @@ const HeaderBar = () => {
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={() => navigate("/profile")}>
                     <User className="mr-2 h-4 w-4" />
-                    Profile
+                    {t("header.profile")}
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => navigate("/myposts")}>
                     <User className="mr-2 h-4 w-4" />
-                    My Posts
+                    {t("header.myPosts")}
                   </DropdownMenuItem>
                   <DropdownMenuItem>
                     <MessageCircle className="mr-2 h-4 w-4" />
-                    Messages
+                    {t("header.messages")}
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem
@@ -129,7 +133,7 @@ const HeaderBar = () => {
                     className="text-destructive focus:text-destructive"
                   >
                     <LogOut className="mr-2 h-4 w-4" />
-                    Logout
+                    {t("header.logout")}
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -143,6 +147,7 @@ const HeaderBar = () => {
               <div className="md:hidden flex items-center gap-2">
                 <Login />
               </div>
+              <LanguageSwitcher />
               <ModeToggle />
             </>
           )}

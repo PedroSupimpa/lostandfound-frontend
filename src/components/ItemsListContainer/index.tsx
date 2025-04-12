@@ -6,6 +6,7 @@ import { z } from "zod";
 import CategoryFilterCard from "../CategoryFilterCard";
 import ItemCard from "../ItemCard";
 import { initializeLocalStorage } from "@/utils/localStorage";
+import { useTranslation } from "react-i18next";
 
 const itensListSchema = z.object({
   latitude: z.string().optional(),
@@ -21,6 +22,7 @@ const itensListSchema = z.object({
 type ItensListSchema = z.infer<typeof itensListSchema>;
 
 const ItemsListContainer = () => {
+  const { t } = useTranslation();
   const {} = useForm<ItensListSchema>({
     resolver: zodResolver(itensListSchema),
   });
@@ -95,7 +97,7 @@ const ItemsListContainer = () => {
   return (
     <div className="w-full max-w-4xl mx-auto">
       <div className="bg-card rounded-lg shadow-md p-4 mb-6">
-        <h2 className="text-2xl font-bold mb-4">Find Lost Items</h2>
+        <h2 className="text-2xl font-bold mb-4">{t("itemsList.title")}</h2>
         <CategoryFilterCard
           onUpdateFilters={(filters: {
             searchText: string;
@@ -110,8 +112,26 @@ const ItemsListContainer = () => {
       </div>
 
       {loading ? (
-        <div className="flex justify-center my-8">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+        <div className="space-y-6">
+          {[1, 2, 3, 4].map((index) => (
+            <div
+              key={index}
+              className="bg-card rounded-lg shadow-md p-4 animate-pulse"
+            >
+              <div className="flex items-start gap-4">
+                <div className="rounded-md bg-muted h-24 w-24"></div>
+                <div className="flex-1 space-y-3">
+                  <div className="h-4 bg-muted rounded w-3/4"></div>
+                  <div className="h-3 bg-muted rounded w-1/2"></div>
+                  <div className="h-3 bg-muted rounded w-1/4"></div>
+                  <div className="flex gap-2 mt-2">
+                    <div className="h-6 w-16 bg-muted rounded"></div>
+                    <div className="h-6 w-16 bg-muted rounded"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
       ) : posts.posts.length > 0 ? (
         <div className="space-y-6">
@@ -121,9 +141,9 @@ const ItemsListContainer = () => {
         </div>
       ) : (
         <div className="text-center py-12">
-          <h3 className="text-xl font-medium">No items found</h3>
+          <h3 className="text-xl font-medium">{t("itemsList.noItemsFound")}</h3>
           <p className="text-muted-foreground mt-2">
-            Try adjusting your search filters
+            {t("itemsList.adjustFilters")}
           </p>
         </div>
       )}

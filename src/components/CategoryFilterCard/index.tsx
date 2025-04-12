@@ -2,6 +2,7 @@
 import { getPostsCategories } from "@/services/posts";
 import { useDebounce } from "@uidotdev/usehooks";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import LocationSearch from "../LocationSearch/location-seach";
 import { Input } from "../ui/input";
 import {
@@ -28,6 +29,7 @@ interface CategoryFilterCardProps {
 }
 
 const CategoryFilterCard = ({ onUpdateFilters }: CategoryFilterCardProps) => {
+  const { t } = useTranslation();
   const [categories, setCategories] = useState<{ id: number; name: string }[]>(
     [],
   );
@@ -102,7 +104,7 @@ const CategoryFilterCard = ({ onUpdateFilters }: CategoryFilterCardProps) => {
       <div className="relative">
         <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
         <Input
-          placeholder="Search by title or description"
+          placeholder={t("filter.searchPlaceholder")}
           className="pl-10 w-full"
           value={filters.searchText}
           onChange={handleInputChange}
@@ -113,21 +115,21 @@ const CategoryFilterCard = ({ onUpdateFilters }: CategoryFilterCardProps) => {
         <div className="w-full md:w-1/2">
           <div className="flex items-center gap-2 mb-1">
             <Tag className="h-4 w-4 text-muted-foreground" />
-            <span className="text-sm font-medium">Category</span>
+            <span className="text-sm font-medium">{t("filter.category")}</span>
           </div>
           <Select
             onValueChange={handleCategoryChange}
             value={filters.selectedCategory}
           >
             <SelectTrigger className="w-full">
-              <SelectValue placeholder="All Categories" />
+              <SelectValue placeholder={t("filter.allCategories")} />
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
-                <SelectItem value="all">All Categories</SelectItem>
+                <SelectItem value="all">{t("filter.allCategories")}</SelectItem>
                 {isLoadingCategories ? (
                   <SelectItem value="loading" disabled>
-                    Loading categories...
+                    {t("filter.loadingCategories")}
                   </SelectItem>
                 ) : (
                   categories.map((category) => (
@@ -147,10 +149,10 @@ const CategoryFilterCard = ({ onUpdateFilters }: CategoryFilterCardProps) => {
         <div className="w-full md:w-1/2">
           <div className="flex items-center gap-2 mb-1">
             <MapPin className="h-4 w-4 text-muted-foreground" />
-            <span className="text-sm font-medium">Location</span>
+            <span className="text-sm font-medium">{t("filter.location")}</span>
           </div>
           <LocationSearch
-            title="Select location"
+            title={t("filter.selectLocation")}
             setGeoLocation={setLocation}
             hasRadius={true}
           />

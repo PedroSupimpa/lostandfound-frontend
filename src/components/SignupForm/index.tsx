@@ -1,21 +1,21 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Loader2, Lock, Mail, MapPin, Phone, User } from "lucide-react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { createUser } from "../../services/user";
-import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-  DialogFooter,
-  DialogDescription,
 } from "../ui/dialog";
+import { Input } from "../ui/input";
 import { Label } from "../ui/label";
-import { useState } from "react";
-import { Loader2, User, Phone, Mail, Lock, MapPin } from "lucide-react";
 
 const createUserSchema = z.object({
   name: z.string().nonempty("Name is required"),
@@ -62,8 +62,20 @@ const SignupForm = () => {
     setIsLoading(true);
     setMessage("");
 
+    // Transform the address: ensure each field is a string.
+    const transformedData = {
+      ...data,
+      address: data.address
+        ? {
+          address: data.address.address || "",
+          number: data.address.number || "",
+          zipcode: data.address.zipcode || "",
+        }
+        : undefined,
+    };
+
     try {
-      const res = await createUser(data);
+      const res = await createUser(transformedData);
       if (res?.status === 201) {
         setMessage("Account created successfully! You can now log in.");
         setError(false);
@@ -83,6 +95,7 @@ const SignupForm = () => {
       setIsLoading(false);
     }
   };
+
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>

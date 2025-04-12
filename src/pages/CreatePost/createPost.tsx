@@ -88,7 +88,7 @@ const CreatePost = () => {
         if (images.length > 0) {
           const urls = await firebaseFileUpload(images);
           for (const url of urls) {
-            await saveImageLink(postCreation.data.id, url);
+            await saveImageLink(0, url);
           }
         }
 
@@ -99,7 +99,7 @@ const CreatePost = () => {
           navigate("/myposts");
         }, 1500);
       } else {
-        toast.error(postCreation.data?.error || "Failed to create post");
+        toast.error("Failed to create post");
       }
     } catch (error) {
       console.error("Error creating post:", error);
